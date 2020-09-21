@@ -1,0 +1,17 @@
+table {
+    width: 100%;
+  }
+tr.mat-row {
+    height: auto;
+}
+tr.mat-header-row {
+    height: 56px;
+}
+
+.table-container {
+    /* max-height: 235px; */
+    overflow: auto;
+}
+.margin {
+    margin: 5px;
+  }
