@@ -11,11 +11,11 @@ import { tap } from 'rxjs/operators';
 })
 export class AddCalorieTrackComponent implements OnInit {
 
-  private readonly foodTypeControl = new FormControl('ss', { validators: Validators.required });
-  private readonly weightControl  = new FormControl('', { validators: Validators.min(0) });
+  public readonly foodTypeControl = new FormControl('ss', { validators: Validators.required });
+  public readonly weightControl  = new FormControl('', { validators: Validators.min(0) });
 
-  private readonly foodTypeNameControl = new FormControl('', { validators: Validators.required });
-  private readonly foodTypeKcalControl = new FormControl('', { validators: Validators.min(0) });
+  public readonly foodTypeNameControl = new FormControl('', { validators: Validators.required });
+  public readonly foodTypeKcalControl = new FormControl('', { validators: Validators.min(0) });
 
   public foodTypes: Observable<string[]> = of([]);
   constructor(
