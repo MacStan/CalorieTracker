@@ -128,5 +128,10 @@
       }
     }
   },
-  "defaultProject": "kcal-tracker"
+  "defaultProject": "kcal-tracker",
+  "schematics": {
+    "@schematics/angular:component": {
+      "styleext": "scss"
+    }
+  }
 }
