@@ -7,6 +7,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatSelectModule } from '@angular/material/select';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { FlexLayoutModule } from '@angular/flex-layout';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -40,6 +41,7 @@ import { MatSortModule } from '@angular/material/sort';
     MatDatepickerModule,
     MatNativeDateModule,
     MatSortModule,
+    MatAutocompleteModule
   ],
   providers: [],
   bootstrap: [AppComponent]

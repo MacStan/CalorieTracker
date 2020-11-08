@@ -1,22 +1,22 @@
 <mat-card class='margin'>
-  <div fxLayout='row' class="zero">
-    <div fxFlex="33" class="one" >
+  <div fxLayout='row'>
+    <div fxFlex="33">
       <mat-form-field class="example-full-width">
         <mat-label>Filter by name</mat-label>
         <input matInput placeholder="filter" type="text" [formControl]="filterControl">
       </mat-form-field>
     </div>
-    <div fxFlex="22" class="one" >
+    <div fxFlex="22">
       <div class="example-full-width">
         <button type='button' mat-raised-button color="primary" (click)="filter()">Apply Filter</button>
       </div>   
     </div>
-    <div fxFlex="22" class="two">
+    <div fxFlex="22">
         <div class="example-full-width">
         <button type='button' mat-raised-button color="primary" (click)="removeFilter()">Remove filter</button>      
       </div>
     </div>
-    <div fxFlex="22" class="two">
+    <div fxFlex="22">
       <div class="example-full-width">
       <button type='button' mat-raised-button color="primary" (click)="exportData()">ExportData</button>      
     </div>

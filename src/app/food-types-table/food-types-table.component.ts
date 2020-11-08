@@ -14,7 +14,7 @@ import { MatSort } from '@angular/material/sort';
 @Component({
   selector: 'app-food-types-table',
   templateUrl: './food-types-table.component.html',
-  styleUrls: ['./food-types-table.component.css']
+  styleUrls: ['./food-types-table.component.scss']
 })
 export class FoodTypesTableComponent implements OnInit {
 

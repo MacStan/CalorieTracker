@@ -2,30 +2,67 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { DatabaseService } from '../services/database.service';
 import { of, Observable } from 'rxjs';
-import { tap } from 'rxjs/operators';
+import { tap, startWith, map, subscribeOn, filter } from 'rxjs/operators';
+import { FoodKindModel } from '../models/food-kind-model';
 
 @Component({
   selector: 'app-add-calorie-track',
   templateUrl: './add-calorie-track.component.html',
-  styleUrls: ['./add-calorie-track.component.css']
+  styleUrls: ['./add-calorie-track.component.scss']
 })
 export class AddCalorieTrackComponent implements OnInit {
 
-  public readonly foodTypeControl = new FormControl('ss', { validators: Validators.required });
+  public readonly foodTypeControl = new FormControl('', { validators: Validators.required });
   public readonly weightControl  = new FormControl('', { validators: Validators.min(0) });
+  public readonly dateControl = new FormControl(new Date());
 
+  public readonly foodTypeBrandControl = new FormControl('', { validators: Validators.required });
   public readonly foodTypeNameControl = new FormControl('', { validators: Validators.required });
   public readonly foodTypeKcalControl = new FormControl('', { validators: Validators.min(0) });
 
-  public foodTypes: Observable<string[]> = of([]);
+  myControl = new FormControl();
+  options: FoodKindModel[] = [];
+  filteredOptions: Observable<FoodKindModel[]>;
+
+  // public foodKinds: Observable<FoodKindModel[]> = of([]);
   constructor(
     private service: DatabaseService
   ) {
-    this.foodTypes = service.getFoodTypesNames$().pipe(tap(x => console.log("addCalorieComponent getfood types name" + x)));
+    service.getFoodKinds$()
+      .pipe(tap(x => this.options = x))
+      .subscribe();
   }
 
   ngOnInit() {
-    setTimeout(() => this.service.pingFoodKindsNames(), 1000);
+    setTimeout(() => this.service.pingFoodKinds(), 1000);
+
+    this.filteredOptions = this.foodTypeControl.valueChanges.pipe(
+      startWith(''),
+      tap(x => {
+        console.log('TYPE');
+        console.log(x);
+      }),
+      filter(x => typeof x === 'string'),
+      map(value => this.autocompleteFilter(value)),
+    );
+  }
+
+  public autocompleteFilter(value: string): FoodKindModel[] {
+    const filterValue = value.toLowerCase();
+    console.log(filterValue);
+    console.log(this.options);
+    const x =  this.options.filter(option => (option.name + ' - ' + option.brand).toLowerCase().indexOf(filterValue) !== -1);
+    console.log(x);
+    return x;
+  }
+
+  public foodKindModelToString(model: FoodKindModel): string {
+    console.log('model');
+    console.log(model);
+    if (typeof model === 'string'){
+      return model;
+    }
+    return  model.name + ' - ' + model.brand;
   }
 
   public addFoodTypeToDatabase() {
@@ -36,6 +73,7 @@ export class AddCalorieTrackComponent implements OnInit {
 
     this.service.addFoodType({
       id: Date.now(),
+      brand: this.foodTypeBrandControl.value,
       name: this.foodTypeNameControl.value,
       kcalper100Gram: parseFloat(this.foodTypeKcalControl.value)
     });
@@ -50,14 +88,18 @@ export class AddCalorieTrackComponent implements OnInit {
       return;
     }
 
-    const foodType = this.service.getFoodKinds().filter(x => x.name === this.foodTypeControl.value)[0];
+    const dateOverwrite: Date = this.dateControl.value;
+    const date = new Date();
+    date.setFullYear(dateOverwrite.getFullYear());
+    date.setMonth(dateOverwrite.getMonth());
+    date.setDate(dateOverwrite.getDate());
 
     console.log('savetoDb');
     this.service.addRecord({
-      date: Date.now(),
-      foodType,
+      date: date.getTime(),
+      foodType: this.foodTypeControl.value,
       weightInGrams: parseFloat(this.weightControl.value),
-      kcalTotal: foodType.kcalper100Gram / 100 * parseFloat(this.weightControl.value)
+      kcalTotal: this.foodTypeControl.value.kcalper100Gram / 100 * parseFloat(this.weightControl.value)
     });
   }
 

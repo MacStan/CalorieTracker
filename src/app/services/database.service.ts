@@ -2,7 +2,7 @@ import { Inject, Injectable } from '@angular/core';
 import { LOCAL_STORAGE, StorageService } from 'ngx-webstorage-service';
 import { RecordModel } from '../models/record';
 import { DatabaseModel } from '../models/database';
-import { Observable, Subject } from 'rxjs';
+import { Observable, Subject, BehaviorSubject } from 'rxjs';
 import { FoodKindModel } from '../models/food-kind-model';
 
 @Injectable({
@@ -14,6 +14,7 @@ export class DatabaseService {
 
   private foodKindsNameSubject = new Subject<string[]>();
   private foodKindsSubject = new Subject<FoodKindModel[]>();
+  private recordsSubject = new BehaviorSubject<RecordModel[]>([]);
 
   constructor(@Inject(LOCAL_STORAGE) private storage: StorageService) { }
 
@@ -21,28 +22,43 @@ export class DatabaseService {
     const store: DatabaseModel = this.retriveStore();
     store.records.push(newRecord);
     this.saveStore(store);
+    this.emitRecords();
   }
 
   removeRecord(date: number) {
     const store = this.retriveStore();
     store.records = store.records.filter(record => record.date !== date);
     this.saveStore(store);
+    this.emitRecords();
   }
 
   addFoodType(newRecord: FoodKindModel) {
     const store: DatabaseModel = this.retriveStore();
     store.foodKinds.push(newRecord);
-    this.foodKindsNameSubject.next( store.foodKinds.map(x => x.name) );
-    this.foodKindsSubject.next(store.foodKinds);
+    this.emitFoodTypes();
     this.saveStore(store);
   }
 
   removeFoodType(name: string, kcalRatio: number) {
     const store = this.retriveStore();
     store.foodKinds = store.foodKinds.filter(x => x.name !== name || x.kcalper100Gram !== kcalRatio);
-    this.foodKindsNameSubject.next( store.foodKinds.map(x => x.name) );
-    this.foodKindsSubject.next(store.foodKinds);
+    this.emitFoodTypes();
     this.saveStore(store);
+  }
+
+  private emitFoodTypes() {
+    const store = this.retriveStore();
+    this.foodKindsNameSubject.next( store.foodKinds.map(x => x.brand + x.name ) );
+    this.foodKindsSubject.next(store.foodKinds);
+  }
+
+  public emitRecords() {
+    const store = this.retriveStore();
+    this.recordsSubject.next(store.records);
+  }
+
+  getRecords$(): Observable<RecordModel[]> {
+    return this.recordsSubject;
   }
 
   getFoodTypesNames$(): Observable<string[]> {
@@ -53,18 +69,9 @@ export class DatabaseService {
     return this.foodKindsSubject;
   }
 
-  pingFoodKindsNames() {
-    const store = this.retriveStore();
-    this.foodKindsNameSubject.next( store.foodKinds.map(x => x.name) );
-  }
-
   pingFoodKinds() {
     const store = this.retriveStore();
     this.foodKindsSubject.next( store.foodKinds );
-  }
-
-  getFoodKinds(): FoodKindModel[] {
-    return this.retriveStore().foodKinds;
   }
 
   getRecords(): RecordModel[] {
