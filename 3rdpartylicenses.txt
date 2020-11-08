@@ -110,6 +110,8 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
+@angular/material/autocomplete
+
 @angular/material/button
 
 @angular/material/card
@@ -121,8 +123,6 @@ THE SOFTWARE.
 @angular/material/dialog
 
 @angular/material/form-field
-
-@angular/material/select
 
 @angular/material/sort
 
