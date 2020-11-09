@@ -1,7 +1,7 @@
 @import '~@angular/material/theming';
 @include mat-core();
 
-$fex: mat-palette($mat-red);
+$fex: mat-palette($mat-blue);
 
 h1 body div {
     background-color: map-get($fex, 200);

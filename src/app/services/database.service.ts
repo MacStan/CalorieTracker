@@ -35,19 +35,20 @@ export class DatabaseService {
   addFoodType(newRecord: FoodKindModel) {
     const store: DatabaseModel = this.retriveStore();
     store.foodKinds.push(newRecord);
-    this.emitFoodTypes();
     this.saveStore(store);
+    this.emitFoodTypes();
   }
 
   removeFoodType(name: string, kcalRatio: number) {
     const store = this.retriveStore();
     store.foodKinds = store.foodKinds.filter(x => x.name !== name || x.kcalper100Gram !== kcalRatio);
-    this.emitFoodTypes();
     this.saveStore(store);
+    this.emitFoodTypes();
   }
 
   private emitFoodTypes() {
     const store = this.retriveStore();
+    console.log('store.foodKinds', store.foodKinds);
     this.foodKindsNameSubject.next( store.foodKinds.map(x => x.brand + x.name ) );
     this.foodKindsSubject.next(store.foodKinds);
   }
