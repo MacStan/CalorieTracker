@@ -38,10 +38,7 @@ export class AddCalorieTrackComponent implements OnInit {
 
     this.filteredOptions = this.foodTypeControl.valueChanges.pipe(
       startWith(''),
-      tap(x => {
-        console.log('TYPE');
-        console.log(x);
-      }),
+      tap(x => console.log('Type', x)),
       filter(x => typeof x === 'string'),
       map(value => this.autocompleteFilter(value)),
     );
@@ -49,10 +46,8 @@ export class AddCalorieTrackComponent implements OnInit {
 
   public autocompleteFilter(value: string): FoodKindModel[] {
     const filterValue = value.toLowerCase();
-    console.log(filterValue);
-    console.log(this.options);
     const x =  this.options.filter(option => (option.name + ' - ' + option.brand).toLowerCase().indexOf(filterValue) !== -1);
-    console.log(x);
+    console.log('Autocomplete: ', filterValue, this.options, x);
     return x;
   }
 
@@ -68,6 +63,13 @@ export class AddCalorieTrackComponent implements OnInit {
   public addFoodTypeToDatabase() {
     if (this.foodTypeNameControl.errors !== null
       || this.foodTypeKcalControl.errors !== null) {
+      return;
+    }
+
+    if( this.service.foodTypeExists(this.foodTypeBrandControl.value, this.foodTypeNameControl.value) )
+    {
+      this.foodTypeNameControl.setErrors( {alreadyExists: 'FoodKind with this brand and Name already exists.'});
+      // this.foodTypeNameControl.updateValueAndValidity({emitEvent: false});
       return;
     }
 

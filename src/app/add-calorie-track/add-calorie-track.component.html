@@ -51,6 +51,9 @@
             <mat-label>Name</mat-label>
             <input matInput type="text" [formControl]="foodTypeNameControl">
         </mat-form-field>
+        <mat-error *ngIf="foodTypeNameControl.hasError('alreadyExists')">
+            {{this.foodTypeNameControl.getError('alreadyExists')}}
+          </mat-error>
         <mat-form-field class="example-full-width">
             <mat-label>kcal per 100 gram</mat-label>
             <input matInput placeholder="100" type="number" [formControl]="foodTypeKcalControl">

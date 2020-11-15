@@ -46,6 +46,13 @@ export class DatabaseService {
     this.emitFoodTypes();
   }
 
+  public foodTypeExists(brand: string, name: string): boolean {
+    const store = this.retriveStore();
+    const found = store.foodKinds.find(x => x.brand === brand && x.name === name);
+    console.log('found', found);
+    return found !== undefined;
+  }
+
   private emitFoodTypes() {
     const store = this.retriveStore();
     console.log('store.foodKinds', store.foodKinds);
